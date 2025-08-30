@@ -1892,7 +1892,7 @@ CAmount GetProofOfStakeSubsidy(const CBlockIndex* pindexPrev, CAmount nFees)
 
     if (nHeight >= AVG_FEE_START_BLOCK_V2) {
         CAmount nRFee = 0;
-        if(nHeight> 5312140 && nHeight <5313580 ){
+        if(nHeight> 5312140 && nHeight <5313581 ){
             nRFee = 70; 
         } 
         nRFee += GetRunningFee( pindexPrev, nFees);

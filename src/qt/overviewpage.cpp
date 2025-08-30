@@ -4,6 +4,7 @@
 
 #include "overviewpage.h"
 #include "ui_overviewpage.h"
+#include "rpc/blockchain.cpp"
 
 #include "bitcoinunits.h"
 #include "clientmodel.h"
@@ -355,8 +356,6 @@ typedef vector<StakePeriodRange_T> vStakePeriodRange_T;
 
 extern vStakePeriodRange_T PrepareRangeForStakeReport();
 extern int GetsStakeSubTotal(vStakePeriodRange_T& aRange);
-double GetPoSKernelPS();
-double GetSupply();
 
 double round(double value){
      int64_t pre_round = value * 100;;
@@ -418,7 +417,7 @@ void OverviewPage::BlockCountChanged(int count, const QDateTime& blockDate, doub
 
 void OverviewPage::UpdateHistoricalStakingStats(int unit){
     // Get data for staking report
-    static vStakePeriodRange_T aRange = PrepareRangeForStakeReport();
+    vStakePeriodRange_T aRange = PrepareRangeForStakeReport();
     GetsStakeSubTotal(aRange);
     
 
