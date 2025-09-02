@@ -4,6 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "chain.h"
+#include "util.h"
 
 using namespace std;
 
@@ -93,6 +94,12 @@ CBlockIndex* CBlockIndex::GetAncestor(int height)
             pindexWalk = pindexWalk->pskip;
             heightWalk = heightSkip;
         } else {
+            
+            if (!pindexWalk->pprev) {
+                LogPrintf("GetAncestor about to assert: walk=%d target=%d blk=%s nHeight=%d\n",
+                heightWalk, height, pindexWalk->GetBlockHash().ToString(), pindexWalk->nHeight);
+                }
+                    
             assert(pindexWalk->pprev);
             pindexWalk = pindexWalk->pprev;
             heightWalk--;

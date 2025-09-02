@@ -4196,6 +4196,21 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
     if (ppindex)
         *ppindex = pindex;
 
+
+        
+if (pindex->nHeight > 0 && pindex->pprev == nullptr) {
+    LogPrintf("INDEX BUG: %s height=%d has null pprev (prev=%s)\n",
+              pindex->GetBlockHash().ToString(), pindex->nHeight,
+              block.hashPrevBlock.ToString());
+    assert(false);
+}
+if (pindex->pprev && pindex->pprev->nHeight != pindex->nHeight - 1) {
+    LogPrintf("HEIGHT MISMATCH: %s h=%d pprev=%d prev=%s\n",
+              pindex->GetBlockHash().ToString(), pindex->nHeight,
+              pindex->pprev->nHeight, block.hashPrevBlock.ToString());
+    assert(false);
+}
+
     return true;
 }
 
@@ -4270,6 +4285,7 @@ static bool AcceptBlock(const CBlock& block, CValidationState& state, const CCha
 
 			
     }
+    
 
 
 
@@ -4874,6 +4890,25 @@ bool LoadBlockIndex()
     // Load block index from databases
     if (!fReindex && !LoadBlockIndexDB())
         return false;
+
+    int bad = 0, badHeight = 0;
+    for (const auto& it : mapBlockIndex) {
+        CBlockIndex* p = it.second;
+        if (p->nHeight > 0 && p->pprev == nullptr) {
+            LogPrintf("BAD INDEX: %s height=%d has null pprev\n", p->GetBlockHash().ToString(), p->nHeight);
+            bad++;
+        }
+        if (p->pprev && p->pprev->nHeight != p->nHeight - 1) {
+            LogPrintf("BAD HEIGHT LINK: %s height=%d pprev->height=%d\n", p->GetBlockHash().ToString(), p->nHeight, p->pprev->nHeight);
+            badHeight++;
+        }
+    }
+    LogPrintf("Index sanity: bad=%d badHeight=%d entries=%zu\n", bad, badHeight, mapBlockIndex.size());
+
+
+
+
+
     return true;
 }
 
