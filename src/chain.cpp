@@ -66,7 +66,7 @@ const CBlockIndex *CChain::FindFork(const CBlockIndex *pindex) const {
 int static inline InvertLowestOne(int n) { return n & (n - 1); }
 
 /** Compute what height to jump back to with the CBlockIndex::pskip pointer. */
-int static inline GetSkipHeight(int height) {
+int CBlockIndex::GetSkipHeight(int height) {
     if (height < 2)
         return 0;
 
@@ -91,6 +91,11 @@ CBlockIndex* CBlockIndex::GetAncestor(int height)
              (heightSkip > height && !(heightSkipPrev < heightSkip - 2 &&
                                        heightSkipPrev >= height)))) {
             // Only follow pskip if pprev->pskip isn't better than pskip->pprev.
+            LogPrintf("Consider skip: curH=%d want=%d heightSkip=%d heightSkipPrev=%d cur=%s pskipH=%d pskip=%s\n",
+                    heightWalk, height, heightSkip, heightSkipPrev,
+                    pindexWalk->GetBlockHash().ToString(),
+                    pindexWalk->pskip->nHeight,
+                    pindexWalk->pskip->GetBlockHash().ToString());
             pindexWalk = pindexWalk->pskip;
             heightWalk = heightSkip;
         } else {

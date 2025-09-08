@@ -232,6 +232,7 @@ public:
         nTime          = 0;
         nBits          = 0;
         nNonce         = 0;
+        nFees          = 0;
     }
 
 	void IncrementFee(CAmount fee) {
@@ -379,6 +380,7 @@ public:
 
     //! Efficiently find an ancestor of this block.
     CBlockIndex* GetAncestor(int height);
+    int GetSkipHeight(int height);
     const CBlockIndex* GetAncestor(int height) const;
 };
 

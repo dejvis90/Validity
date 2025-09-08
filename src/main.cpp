@@ -4692,6 +4692,40 @@ bool static LoadBlockIndexDB()
         DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
         Checkpoints::GuessVerificationProgress(chainparams.Checkpoints(), chainActive.Tip()));
 
+
+    int bad = 0, badHeight = 0;
+    for (const auto& it : mapBlockIndex) {
+        CBlockIndex* p = it.second;
+        if (p->nHeight > 0 && p->pprev == nullptr) {
+            LogPrintf("BAD INDEX: %s height=%d has null pprev\n", p->GetBlockHash().ToString(), p->nHeight);
+            bad++;
+        }
+        if (p->pprev && p->pprev->nHeight != p->nHeight - 1) {
+            LogPrintf("BAD HEIGHT LINK: %s height=%d pprev->height=%d\n", p->GetBlockHash().ToString(), p->nHeight, p->pprev->nHeight);
+            badHeight++;
+        }
+    }
+    LogPrintf("Index sanity: bad=%d badHeight=%d entries=%zu\n", bad, badHeight, mapBlockIndex.size());
+
+
+    int badSkip = 0, badParent = 0;
+for (const auto& it : mapBlockIndex) {
+    CBlockIndex* p = it.second;
+    if (p->nHeight > 0 && p->pprev == nullptr) {
+        LogPrintf("BAD: %s height=%d has null pprev\n", p->GetBlockHash().ToString(), p->nHeight);
+        badParent++;
+    }
+    int hs = p->GetSkipHeight(p->nHeight);
+    if (p->pskip && p->pskip->nHeight != hs) {
+        LogPrintf("BAD SKIP: %s h=%d pskipH=%d expected=%d pskip=%s\n",
+            p->GetBlockHash().ToString(), p->nHeight,
+            p->pskip->nHeight, hs,
+            p->pskip->GetBlockHash().ToString());
+        badSkip++;
+    }
+}
+LogPrintf("Sanity: badParent=%d badSkip=%d total=%zu\n", badParent, badSkip, mapBlockIndex.size());
+
     return true;
 }
 
@@ -4891,19 +4925,7 @@ bool LoadBlockIndex()
     if (!fReindex && !LoadBlockIndexDB())
         return false;
 
-    int bad = 0, badHeight = 0;
-    for (const auto& it : mapBlockIndex) {
-        CBlockIndex* p = it.second;
-        if (p->nHeight > 0 && p->pprev == nullptr) {
-            LogPrintf("BAD INDEX: %s height=%d has null pprev\n", p->GetBlockHash().ToString(), p->nHeight);
-            bad++;
-        }
-        if (p->pprev && p->pprev->nHeight != p->nHeight - 1) {
-            LogPrintf("BAD HEIGHT LINK: %s height=%d pprev->height=%d\n", p->GetBlockHash().ToString(), p->nHeight, p->pprev->nHeight);
-            badHeight++;
-        }
-    }
-    LogPrintf("Index sanity: bad=%d badHeight=%d entries=%zu\n", bad, badHeight, mapBlockIndex.size());
+   
 
 
 
