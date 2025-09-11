@@ -252,6 +252,8 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskB
 bool InitBlockIndex(const CChainParams& chainparams);
 /** Load the block tree and coins database from disk */
 bool LoadBlockIndex();
+
+static void CheckBlockIndexLinks(const CBlockIndex* tip);
 /** Unload database information */
 void UnloadBlockIndex();
 /** Process protocol messages received from a given node */

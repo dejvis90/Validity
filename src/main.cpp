@@ -49,7 +49,7 @@
 #include "versionbits.h"
 #include "key.h"
 #include "wallet/wallet.h"
-
+#include <unordered_set>
 #include <atomic>
 #include <sstream>
 
@@ -4874,7 +4874,72 @@ bool LoadBlockIndex()
     // Load block index from databases
     if (!fReindex && !LoadBlockIndexDB())
         return false;
+
+    LogPrintf("Running checkblockindex after load %s \n", "");
+    CheckBlockIndex(Params().GetConsensus());
+    LogPrintf("Checkblockindex after load Complete%s \n", "");
+
+    CheckBlockIndexLinks(chainActive.Tip());
+
+
     return true;
+}
+
+static void CheckBlockIndexLinks(const CBlockIndex* tip)
+{
+    const CBlockIndex* p     = tip;   // primary walker
+    const CBlockIndex* pwalk = tip;   // secondary walker (explicit "pwalk")
+
+    std::unordered_set<const CBlockIndex*> seen;
+    int steps = 0;
+
+   
+
+    while (p) {
+        // Catch loops/corruption (a well-formed chain must never revisit a node).
+        bool inserted = seen.insert(p).second;
+        if (!inserted) {
+            LogPrintf("CheckBlockIndexLinks: cycle detected at height=%d hash=%s\n",
+                      p->nHeight, p->GetBlockHash().ToString());
+            assert(false);
+        }
+
+        // Genesis check vs. parent invariants.
+        if (p->pprev == nullptr) {
+            // Must be genesis.
+            if (p->GetBlockHash() !=  Params().GetConsensus().hashGenesisBlock ) {
+                LogPrintf("CheckBlockIndexLinks: non-genesis with null pprev at height=%d\n", p->nHeight);
+                assert(false);
+            }
+        } else {
+            // Height continuity.
+            if (p->pprev->nHeight + 1 != p->nHeight) {
+                LogPrintf("CheckBlockIndexLinks: height mismatch h=%d prev_h=%d\n",
+                          p->nHeight, p->pprev->nHeight);
+                assert(false);
+            }            
+        }
+
+        // Advance both cursors by one parent step.
+        p = p->pprev;
+        pwalk = (pwalk ? pwalk->pprev : nullptr);
+
+        // The two views should always agree (we're stepping both the same way).
+        if (p != pwalk) {
+            LogPrintf("CheckBlockIndexLinks: divergence after %d steps.\n", steps);
+            assert(false);
+        }
+
+        ++steps;
+    }
+
+    // If we exited, both must be null.
+    if (pwalk != nullptr) {
+        LogPrintf("CheckBlockIndexLinks: pwalk not null at end.\n");
+        assert(false);
+    }
+
+    LogPrintf("CheckBlockIndexLinks: OK — walked %d links to genesis.\n", steps);
 }
 
 bool InitBlockIndex(const CChainParams& chainparams) 
