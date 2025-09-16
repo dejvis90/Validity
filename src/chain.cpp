@@ -4,6 +4,9 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "chain.h"
+#include "util.h"
+#include "sync.h"
+#include "main.h"
 
 using namespace std;
 
@@ -77,6 +80,8 @@ int static inline GetSkipHeight(int height) {
 
 CBlockIndex* CBlockIndex::GetAncestor(int height)
 {
+
+    AssertLockHeld(cs_main);
     if (height > nHeight || height < 0)
         return NULL;
 
@@ -93,6 +98,18 @@ CBlockIndex* CBlockIndex::GetAncestor(int height)
             pindexWalk = pindexWalk->pskip;
             heightWalk = heightSkip;
         } else {
+            
+            if (!pindexWalk->pprev) {
+                if(!nHeight)
+                    LogPrintf("GetAncestor about to assert: Starting blockBlock %s has no nHeight", pindexWalk->GetBlockHash().ToString());
+
+                if(!pindexWalk-> nHeight)
+                    LogPrintf("GetAncestor about to assert: Working blockBlock %s has no nHeight", pindexWalk->GetBlockHash().ToString());
+                
+                LogPrintf("GetAncestor about to assert: walkpack position =%d target block=%d block with no pprev=%s , =%d\n",
+                heightWalk, height, pindexWalk->GetBlockHash().ToString(), pindexWalk->nHeight);
+                }
+                    
             assert(pindexWalk->pprev);
             pindexWalk = pindexWalk->pprev;
             heightWalk--;

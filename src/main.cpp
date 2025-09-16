@@ -4196,6 +4196,21 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
     if (ppindex)
         *ppindex = pindex;
 
+
+        
+if (pindex->nHeight > 0 && pindex->pprev == nullptr) {
+    LogPrintf("INDEX BUG: %s height=%d has null pprev (prev=%s)\n",
+              pindex->GetBlockHash().ToString(), pindex->nHeight,
+              block.hashPrevBlock.ToString());
+    assert(false);
+}
+if (pindex->pprev && pindex->pprev->nHeight != pindex->nHeight - 1) {
+    LogPrintf("HEIGHT MISMATCH: %s h=%d pprev=%d prev=%s\n",
+              pindex->GetBlockHash().ToString(), pindex->nHeight,
+              pindex->pprev->nHeight, block.hashPrevBlock.ToString());
+    assert(false);
+}
+
     return true;
 }
 
@@ -4571,9 +4586,12 @@ CBlockIndex * InsertBlockIndex(uint256 hash)
 
 bool static LoadBlockIndexDB()
 {
+    LogPrintf("PWALK DEBUG Starting index load  %s \n", "");
     const CChainParams& chainparams = Params();
     if (!pblocktree->LoadBlockIndexGuts(InsertBlockIndex))
         return false;
+
+    LogPrintf("PWALK DEBUG BlockIndexGuts load complete  %s \n", "");
 
     boost::this_thread::interruption_point();
 
@@ -4585,10 +4603,27 @@ bool static LoadBlockIndexDB()
         CBlockIndex* pindex = item.second;
         vSortedByHeight.push_back(make_pair(pindex->nHeight, pindex));
     }
+  
     sort(vSortedByHeight.begin(), vSortedByHeight.end());
+    int last = 0;
     BOOST_FOREACH(const PAIRTYPE(int, CBlockIndex*)& item, vSortedByHeight)
     {
         CBlockIndex* pindex = item.second;
+
+        if(pindex->nHeight){
+            if(pindex->nHeight == last +1)
+                last = pindex->nHeight;
+            else
+                LogPrintf("PWALK DEBUG Processing block %d but previously processed block was %d \n", pindex->nHeight, last);
+        }
+        else
+            LogPrintf("PWALK DEBUG block %s has no nHeight. Previously processed block was %d \n", pindex->GetBlockHash().ToString(), last);
+
+
+       
+
+
+
         pindex->nChainWork = (pindex->pprev ? pindex->pprev->nChainWork : 0) + GetBlockProof(*pindex);
         // We can link the chain of blocks for which we've received transactions at some point.
         // Pruned nodes may have deleted the block.
@@ -4610,6 +4645,15 @@ bool static LoadBlockIndexDB()
             pindexBestInvalid = pindex;
         if (pindex->pprev)
             pindex->BuildSkip();
+        else{
+            int height = 0;
+            if(pindex->nHeight)
+                height = pindex->nHeight;
+
+            LogPrintf("PWALK DEBUG Not building skip for block %d hash %s but previously processed block was %d \n", pindex->nHeight, pindex->GetBlockHash().ToString(), last);
+        }
+            
+
         if (pindex->IsValid(BLOCK_VALID_TREE) && (pindexBestHeader == NULL || CBlockIndexWorkComparator()(pindexBestHeader, pindex)))
             pindexBestHeader = pindex;
     }
@@ -4871,13 +4915,14 @@ void UnloadBlockIndex()
 
 bool LoadBlockIndex()
 {
+     
     // Load block index from databases
     if (!fReindex && !LoadBlockIndexDB())
         return false;
 
-    LogPrintf("Running checkblockindex after load %s \n", "");
+    LogPrintf("PWALK DEBUG Running checkblockindex after load %s \n", "");
     CheckBlockIndex(Params().GetConsensus());
-    LogPrintf("Checkblockindex after load Complete%s \n", "");
+    LogPrintf("PWALK DEBUG Checkblockindex after load Complete%s \n", "");
 
     CheckBlockIndexLinks(chainActive.Tip());
 
