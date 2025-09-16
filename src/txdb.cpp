@@ -188,6 +188,13 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 CBlockIndex* pindexNew = insertBlockIndex(diskindex.GetBlockHash());
                 pindexNew->pprev          = insertBlockIndex(diskindex.hashPrev);
                 pindexNew->nHeight        = diskindex.nHeight;
+                if (!pindex->pprev && pindex->nHeight > 0) {
+    LogPrintf("DEBUG: Block %s has height %d but no pprev (prev hash = %s)\n",
+              pindex->GetBlockHash().ToString(),
+              pindex->nHeight,
+              diskindex.hashPrev.ToString());
+}
+
                 pindexNew->nFees		  = diskindex.nFees;
                 pindexNew->nFile          = diskindex.nFile;
                 pindexNew->nDataPos       = diskindex.nDataPos;
