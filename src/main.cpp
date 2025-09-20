@@ -4589,6 +4589,10 @@ bool static LoadBlockIndexDB()
     BOOST_FOREACH(const PAIRTYPE(int, CBlockIndex*)& item, vSortedByHeight)
     {
         CBlockIndex* pindex = item.second;
+
+        if(pindex->nHeight == 0 && pindex->GetBlockHash() != Params().GenesisBlock().GetHash())
+            return false;
+
         pindex->nChainWork = (pindex->pprev ? pindex->pprev->nChainWork : 0) + GetBlockProof(*pindex);
         // We can link the chain of blocks for which we've received transactions at some point.
         // Pruned nodes may have deleted the block.
