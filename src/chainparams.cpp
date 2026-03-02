@@ -285,7 +285,22 @@ public:
 
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1393221600, 216178, 0x1f00ffff, 1, 0);
+        genesis = CreateGenesisBlock(1393221600, 0, 0x1f00ffff, 1, 0);
+		CBlock genesisTemp = genesis;
+		
+		while (UintToArith256(genesisTemp.GetHash()) > UintToArith256(consensus.powLimit)) {
+		    genesisTemp.nNonce++;
+		    if (genesisTemp.nNonce == 0) {
+		        genesisTemp.nTime++;
+		    }
+		}
+		
+		std::cout << "Genesis hash: " << genesisTemp.GetHash().ToString() << std::endl;
+		std::cout << "Nonce: " << genesisTemp.nNonce << std::endl;
+		std::cout << "Time: " << genesisTemp.nTime << std::endl;
+		std::cout << "Merkle root: " << genesisTemp.hashMerkleRoot.ToString() << std::endl;
+		
+		genesis = genesisTemp;
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("0x0000724595fb3b9609d441cbfb9577615c292abf07d996d3edabc48de843642d"));
         //assert(genesis.hashMerkleRoot == uint256S("0x12630d16a97f24b287c8c2594dda5fb98c9e6c70fc61d44191931ea2aa08dc90"));
@@ -298,7 +313,7 @@ public:
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
-        cashaddrPrefix = "blktest";
+        cashaddrPrefix = "valtest";
 
         
 
@@ -308,13 +323,7 @@ public:
         fMineBlocksOnDemand = false;
         fTestnetToBeDeprecatedFieldRPC = true;
 
-        checkpointData = (CCheckpointData) {
-            boost::assign::map_list_of
-            ( 90235, uint256S("0x567898e79184dc2f7dc3a661f794f28566e4b856d70180914f7371b1b3cc82d8")),
-            1549558800,
-            179080,
-            2.0
-        };
+        checkpointData = (CCheckpointData) {  };
 
     }
 };
@@ -432,3 +441,4 @@ void UpdateRegtestBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime,
 {
     regTestParams.UpdateBIP9Parameters(d, nStartTime, nTimeout);
 }
+
