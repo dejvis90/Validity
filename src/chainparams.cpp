@@ -285,20 +285,30 @@ public:
 
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1393221600, 103473, 0x1f00ffff, 1, 0);
+        genesis = CreateGenesisBlock(1393221600, 0, 0x1f00ffff, 1, 0);
+		CBlock genesisTemp = genesis;
 		
+		while (UintToArith256(genesisTemp.GetHash()) > UintToArith256(consensus.powLimit)) {
+		    genesisTemp.nNonce++;
+		    if (genesisTemp.nNonce == 0) {
+		        genesisTemp.nTime++;
+		    }
+		}
+		
+		std::cout << "Genesis hash: " << genesisTemp.GetHash().ToString() << std::endl;
+		std::cout << "Nonce: " << genesisTemp.nNonce << std::endl;
+		std::cout << "Time: " << genesisTemp.nTime << std::endl;
+		std::cout << "Merkle root: " << genesisTemp.hashMerkleRoot.ToString() << std::endl;
+		
+		genesis = genesisTemp;
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("000072e428a5f5dc3173fc27a5ccd85c9dab13961a7d08140069149201b91150"));
-        assert(genesis.hashMerkleRoot == uint256S("a69d8e54d668f46f264526c5c3c96ff5b8211a9a5f03f4cc9b1e868315ace6d7"));
-
-        vFixedSeeds.clear();
-        vSeeds.clear();
-
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
+        //assert(consensus.hashGenesisBlock == uint256S("0x0000724595fb3b9609d441cbfb9577615c292abf07d996d3edabc48de843642d"));
+        //assert(genesis.hashMerkleRoot == uint256S("0x12630d16a97f24b287c8c2594dda5fb98c9e6c70fc61d44191931ea2aa08dc90"));
+@@ -298,7 +313,7 @@ class CTestNetParams : public CChainParams {
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
+        cashaddrPrefix = "blktest";
         cashaddrPrefix = "valtest";
 
         
