@@ -263,10 +263,10 @@ public:
         consensus.nProtocolV1RetargetingFixedTime = 1395631999;
         consensus.nProtocolV2Time = 1407053625;
         consensus.nProtocolV3Time = 1444028400;
-        consensus.nLastPOWBlock = 0x7fffffff;
+        consensus.nLastPOWBlock = 20160;
         consensus.nStakeTimestampMask = 0xf;
-        consensus.nCoinbaseMaturity = 10;
-        consensus.nStakeMinAge = 8 * 60 * 60;
+        consensus.nCoinbaseMaturity = 60;
+        consensus.nStakeMinAge = 6 * 60 * 60;
 
         pchMessageStart[0] = 0xcd;
         pchMessageStart[1] = 0xf2;
@@ -428,6 +428,7 @@ void UpdateRegtestBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime,
 {
     regTestParams.UpdateBIP9Parameters(d, nStartTime, nTimeout);
 }
+
 
 
 
