@@ -1890,16 +1890,21 @@ CAmount GetProofOfStakeSubsidy(const CBlockIndex* pindexPrev, CAmount nFees)
     int nHeight = pindexPrev->nHeight + 1; 
     CAmount nSubsidy = getFixedStakeSubsidy(nHeight); 
 
-    if (nHeight >= AVG_FEE_START_BLOCK_V2) {
+    const Consensus::Params& consensus = Params().GetConsensus();
+    int avgFeeStartBlock = consensus.nAvgFeeStartBlock;
+    int avgFeeStartBlockRevert = consensus.nAvgFeeStartBlockRevert;
+    int avgFeeStartBlockV2 = consensus.nAvgFeeStartBlockV2;
+
+    if (nHeight >= avgFeeStartBlockV2) {
         CAmount nRFee = 0;
         if(nHeight> 5312140 && nHeight <5313581 ){
             nRFee = 70; 
         } 
         nRFee += GetRunningFee( pindexPrev, nFees);
         return nSubsidy + nRFee;
-    } else if (nHeight >= AVG_FEE_START_BLOCK_REVERT) {
+    } else if (nHeight >= avgFeeStartBlockRevert) {
         return nSubsidy + nFees;
-    } else if (nHeight >= AVG_FEE_START_BLOCK) {
+    } else if (nHeight >= avgFeeStartBlock) {
         CAmount nRFee = 0;
 
         nRFee = GetRunningFee( pindexPrev, nFees);

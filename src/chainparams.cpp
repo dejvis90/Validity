@@ -263,10 +263,15 @@ public:
         consensus.nProtocolV1RetargetingFixedTime = 1395631999;
         consensus.nProtocolV2Time = 1407053625;
         consensus.nProtocolV3Time = 1444028400;
+        consensus.AvgFeeProtocolTime = 0;
+        consensus.nAvgFeeStartBlock = 20161;
+        consensus.nAvgFeeStartBlockRevert = 20161;
+        consensus.nAvgFeeStartBlockV2 = 20161;
         consensus.nLastPOWBlock = 20160;
         consensus.nStakeTimestampMask = 0xf;
         consensus.nCoinbaseMaturity = 60;
         consensus.nStakeMinAge = 6 * 60 * 60;
+        consensus.DEV_FUND_BLOCK_HEIGHT = 20161;
 
         pchMessageStart[0] = 0xcd;
         pchMessageStart[1] = 0xf2;
@@ -290,8 +295,8 @@ public:
         assert(consensus.hashGenesisBlock == uint256S("000072e428a5f5dc3173fc27a5ccd85c9dab13961a7d08140069149201b91150"));
         assert(genesis.hashMerkleRoot == uint256S("a69d8e54d668f46f264526c5c3c96ff5b8211a9a5f03f4cc9b1e868315ace6d7"));
 
-        vFixedSeeds.clear();
-        vSeeds.clear();
+        // Keep configured testnet bootstrap peers (if any are provided).
+        vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
