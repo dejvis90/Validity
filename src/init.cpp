@@ -490,8 +490,8 @@ std::string HelpMessage(HelpMessageMode mode)
 
 std::string LicenseInfo()
 {
-    const std::string URL_SOURCE_CODE = "<https://github.com/JJ12880/radium-more>";
-    const std::string URL_WEBSITE = "<https://radiumcore.org/>";
+    const std::string URL_SOURCE_CODE = "<https://github.com/RadiumCore/Validity>";
+    const std::string URL_WEBSITE = "<https://validitytech.com/>";
     // todo: remove urls from translations on next change
 
     // return FormatParagraph(strprintf(_("Copyright (C) %i-%i %s"), 2009, COPYRIGHT_YEAR, CopyrightHolders())) + "\n" +
