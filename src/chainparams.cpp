@@ -264,19 +264,19 @@ public:
         consensus.nProtocolV2Time = 1407053625;
         consensus.nProtocolV3Time = 1444028400;
         consensus.AvgFeeProtocolTime = 0;
-        consensus.nAvgFeeStartBlock = 20161;
-        consensus.nAvgFeeStartBlockRevert = 20161;
-        consensus.nAvgFeeStartBlockV2 = 20161;
-        consensus.nLastPOWBlock = 20160;
+        consensus.nAvgFeeStartBlock = 20162;
+        consensus.nAvgFeeStartBlockRevert = 20162;
+        consensus.nAvgFeeStartBlockV2 = 20162;
+        consensus.nLastPOWBlock = 20161;
         consensus.nStakeTimestampMask = 0xf;
         consensus.nCoinbaseMaturity = 60;
         consensus.nStakeMinAge = 6 * 60 * 60;
-        consensus.DEV_FUND_BLOCK_HEIGHT = 20161;
+        consensus.DEV_FUND_BLOCK_HEIGHT = 20162;
 
-        pchMessageStart[0] = 0xcd;
-        pchMessageStart[1] = 0xf2;
-        pchMessageStart[2] = 0xc0;
-        pchMessageStart[3] = 0xef;
+        pchMessageStart[0] = 0x3d;
+        pchMessageStart[1] = 0x8d;
+        pchMessageStart[2] = 0xdc;
+        pchMessageStart[3] = 0xbc;
         nDefaultPort = 25714;
 
         // The best chain should have at least this much work.
@@ -370,7 +370,7 @@ public:
         pchMessageStart[1] = 0x35;
         pchMessageStart[2] = 0x22;
         pchMessageStart[3] = 0x06;
-        nDefaultPort = 25714;
+        nDefaultPort = 25715;
         nPruneAfterHeight = 100000;
 
         genesis = CreateGenesisBlock(1393221600, 216178, 0x1f00ffff, 1, 0);
