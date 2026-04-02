@@ -78,6 +78,10 @@ bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, con
     // Base target
     arith_uint256 bnTarget;
     bnTarget.SetCompact(nBits);
+	LogPrintf("POS DEBUG:\n");
+	LogPrintf("  nBits: %u\n", nBits);
+	LogPrintf("  target: %s\n", bnTarget.ToString());
+	LogPrintf("  hashProofOfStake: %s\n", hashProofOfStake.ToString());
 
     // Weighted target
     int64_t nValueIn = txPrev->vout[prevout.n].nValue;
@@ -105,7 +109,9 @@ bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, con
 
     // Now check if proof-of-stake hash meets target protocol
     if (UintToArith256(hashProofOfStake) > bnTarget)
+        LogPrintf("  RESULT: FAIL (hash > target)\n");
         return false;
+    LogPrintf("  RESULT: PASS (hash <= target)\n");
 
     if (fDebug && !fPrintProofOfStake)
     {
