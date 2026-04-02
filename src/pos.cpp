@@ -78,10 +78,7 @@ bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, con
     // Base target
     arith_uint256 bnTarget;
     bnTarget.SetCompact(nBits);
-	LogPrintf("POS DEBUG:\n");
-	LogPrintf("  nBits: %u\n", nBits);
-	LogPrintf("  target: %s\n", bnTarget.ToString());
-	LogPrintf("  hashProofOfStake: %s\n", hashProofOfStake.ToString());
+	
 
     // Weighted target
     int64_t nValueIn = txPrev->vout[prevout.n].nValue;
@@ -98,6 +95,11 @@ bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, con
     ss << txPrev->nTime << prevout.hash << prevout.n << nTimeTx;
 
     uint256 hashProofOfStake = ss.GetHash();
+
+	LogPrintf("POS DEBUG:\n");
+	LogPrintf("  nBits: %u\n", nBits);
+	LogPrintf("  target: %s\n", bnTarget.ToString());
+	LogPrintf("  hashProofOfStake: %s\n", hashProofOfStake.ToString());
 
     if (fPrintProofOfStake)
     {
