@@ -245,7 +245,7 @@ public:
         consensus.nMajorityWindow = 1000;
         consensus.powLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.posLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.posLimitV2 = uint256S("000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.posLimitV2 = uint256S("00000ffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nTargetTimespan = 16 * 60; // 16 mins
         consensus.nTargetSpacingV1 = 60;
         consensus.nTargetSpacing = 64;
@@ -264,14 +264,14 @@ public:
         consensus.nProtocolV2Time = 1407053625;
         consensus.nProtocolV3Time = 1444028400;
         consensus.AvgFeeProtocolTime = 0;
-        consensus.nAvgFeeStartBlock = 20162;
-        consensus.nAvgFeeStartBlockRevert = 20162;
-        consensus.nAvgFeeStartBlockV2 = 20162;
-        consensus.nLastPOWBlock = 20161;
+        consensus.nAvgFeeStartBlock = 20163;
+        consensus.nAvgFeeStartBlockRevert = 20163;
+        consensus.nAvgFeeStartBlockV2 = 20163;
+        consensus.nLastPOWBlock = 20162;
         consensus.nStakeTimestampMask = 0xf;
         consensus.nCoinbaseMaturity = 60;
         consensus.nStakeMinAge = 6 * 60 * 60;
-        consensus.DEV_FUND_BLOCK_HEIGHT = 20162;
+        consensus.DEV_FUND_BLOCK_HEIGHT = 20163;
 
         pchMessageStart[0] = 0x3d;
         pchMessageStart[1] = 0x8d;
@@ -312,10 +312,7 @@ public:
         fMineBlocksOnDemand = false;
         fTestnetToBeDeprecatedFieldRPC = true;
 
-        checkpointData = (CCheckpointData) { 
-			boost::assign::map_list_of
-					(0, uint256S("000072e428a5f5dc3173fc27a5ccd85c9dab13961a7d08140069149201b91150")) //genesis
-			};
+        checkpointData = (CCheckpointData) {};
 
     }
 };
