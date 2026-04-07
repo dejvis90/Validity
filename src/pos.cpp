@@ -110,9 +110,10 @@ bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, con
     }
 
     // Now check if proof-of-stake hash meets target protocol
-    if (UintToArith256(hashProofOfStake) > bnTarget)
+    if (UintToArith256(hashProofOfStake) > bnTarget) {
         LogPrintf("  RESULT: FAIL (hash > target)\n");
         return false;
+    }
     LogPrintf("  RESULT: PASS (hash <= target)\n");
 
     if (fDebug && !fPrintProofOfStake)
