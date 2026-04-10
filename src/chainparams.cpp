@@ -263,7 +263,7 @@ public:
         consensus.nProtocolV1RetargetingFixedTime = 1395631999;
         consensus.nProtocolV2Time = 1407053625;
         consensus.nProtocolV3Time = 1444028400;
-        consensus.AvgFeeProtocolTime = 0;
+        consensus.AvgFeeProtocolTime = 1773056230;
         consensus.nAvgFeeStartBlock = 20163;
         consensus.nAvgFeeStartBlockRevert = 20163;
         consensus.nAvgFeeStartBlockV2 = 20163;
