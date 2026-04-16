@@ -291,6 +291,9 @@ public:
         nPruneAfterHeight = 1000;
 		
 		genesis = CreateGenesisBlock(1776340925, 64803, 0x1f00ffff, 1, 0);
+		LogPrintf("genesis time: %d\n", genesis.GetBlockTime());
+		LogPrintf("V2 active at genesis: %d\n",
+    	consensusParams.IsProtocolV2(genesis.GetBlockTime()));
 		
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0000ae3867503a14022b5223b1712d150414b51663a46e077caf3c25b6f9a59f"));
