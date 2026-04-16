@@ -15,7 +15,6 @@
 #include <boost/assign/list_of.hpp>
 
 #include "chainparamsseeds.h"
-#include <arith_uint256.h>
 
 using namespace std;
 
@@ -264,7 +263,7 @@ public:
         consensus.nProtocolV1RetargetingFixedTime = 1395631999;
         consensus.nProtocolV2Time = 1407053625;
         consensus.nProtocolV3Time = 1444028400;
-        consensus.AvgFeeProtocolTime = 1773056230;
+        consensus.AvgFeeProtocolTime = 1776340926;
         consensus.nAvgFeeStartBlock = 20161;
         consensus.nAvgFeeStartBlockRevert = 20161;
         consensus.nAvgFeeStartBlockV2 = 20161;
@@ -291,26 +290,11 @@ public:
 
         nPruneAfterHeight = 1000;
 		
-        //genesis = CreateGenesisBlock(1393221600, 103473, 0x1f00ffff, 1, 0);
-		genesis = CreateGenesisBlock(1776340925, 0, 0x1f00ffff, 1, 0);
-		CBlock genesisTemp = genesis;
+		genesis = CreateGenesisBlock(1776340925, 64803, 0x1f00ffff, 1, 0);
 		
-		while (UintToArith256(genesisTemp.GetHash()) > UintToArith256(consensus.powLimit)) {
-		    genesisTemp.nNonce++;
-		    if (genesisTemp.nNonce == 0) {
-		        genesisTemp.nTime++;
-		    }
-		}
-		
-		std::cout << "Genesis hash: " << genesisTemp.GetHash().ToString() << std::endl;
-		std::cout << "Nonce: " << genesisTemp.nNonce << std::endl;
-		std::cout << "Time: " << genesisTemp.nTime << std::endl;
-		std::cout << "Merkle root: " << genesisTemp.hashMerkleRoot.ToString() << std::endl;
-		
-		genesis = genesisTemp;
         consensus.hashGenesisBlock = genesis.GetHash();
-        //assert(consensus.hashGenesisBlock == uint256S("000072e428a5f5dc3173fc27a5ccd85c9dab13961a7d08140069149201b91150"));
-        //assert(genesis.hashMerkleRoot == uint256S("a69d8e54d668f46f264526c5c3c96ff5b8211a9a5f03f4cc9b1e868315ace6d7"));
+        assert(consensus.hashGenesisBlock == uint256S("0000ae3867503a14022b5223b1712d150414b51663a46e077caf3c25b6f9a59f"));
+        assert(genesis.hashMerkleRoot == uint256S("0f9b9bd4bc2227bb29ece3bae3f025b2207bf29eddc6394947c8f2a7db88bf1a"));
 
         // Keep configured testnet bootstrap peers (if any are provided).
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
