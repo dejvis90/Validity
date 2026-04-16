@@ -261,8 +261,8 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
 
         consensus.nProtocolV1RetargetingFixedTime = 1395631999;
-        consensus.nProtocolV2Time = 1407053625;
-        consensus.nProtocolV3Time = 1444028400;
+        consensus.nProtocolV2Time = 1801145035;
+        consensus.nProtocolV3Time = 1831138461;
         consensus.AvgFeeProtocolTime = 1776340926;
         consensus.nAvgFeeStartBlock = 20161;
         consensus.nAvgFeeStartBlockRevert = 20161;
