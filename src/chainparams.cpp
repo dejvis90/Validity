@@ -292,7 +292,6 @@ public:
 		
 		genesis = CreateGenesisBlock(1393221610, 183668, 0x1f00ffff, 1, 0);
 		
-		genesis = genesisTemp;
 		//LogPrintf("genesis time: %d\n", genesis.GetBlockTime());
 		//LogPrintf("V2 active at genesis: %d\n",
     	//consensusParams.IsProtocolV2(genesis.GetBlockTime()));
