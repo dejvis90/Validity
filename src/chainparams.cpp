@@ -15,7 +15,6 @@
 #include <boost/assign/list_of.hpp>
 
 #include "chainparamsseeds.h"
-#include <arith_uint256.h>
 
 using namespace std;
 
@@ -291,20 +290,7 @@ public:
 
         nPruneAfterHeight = 1000;
 		
-		genesis = CreateGenesisBlock(1393221610, 0, 0x1f00ffff, 1, 0);
-		CBlock genesisTemp = genesis;
-		
-		while (UintToArith256(genesisTemp.GetHash()) > UintToArith256(consensus.powLimit)) {
-		    genesisTemp.nNonce++;
-		    if (genesisTemp.nNonce == 0) {
-		        genesisTemp.nTime++;
-		    }
-		}
-		
-		std::cout << "Genesis hash: " << genesisTemp.GetHash().ToString() << std::endl;
-		std::cout << "Nonce: " << genesisTemp.nNonce << std::endl;
-		std::cout << "Time: " << genesisTemp.nTime << std::endl;
-		std::cout << "Merkle root: " << genesisTemp.hashMerkleRoot.ToString() << std::endl;
+		genesis = CreateGenesisBlock(1393221610, 183668, 0x1f00ffff, 1, 0);
 		
 		genesis = genesisTemp;
 		//LogPrintf("genesis time: %d\n", genesis.GetBlockTime());
@@ -312,8 +298,8 @@ public:
     	//consensusParams.IsProtocolV2(genesis.GetBlockTime()));
 		
         consensus.hashGenesisBlock = genesis.GetHash();
-        //assert(consensus.hashGenesisBlock == uint256S("0000ae3867503a14022b5223b1712d150414b51663a46e077caf3c25b6f9a59f"));
-        //assert(genesis.hashMerkleRoot == uint256S("0f9b9bd4bc2227bb29ece3bae3f025b2207bf29eddc6394947c8f2a7db88bf1a"));
+        assert(consensus.hashGenesisBlock == uint256S("0000fa1e232dad587f38c17f69ec8d47094fcd5617f90bc456e36e3b58b8e6bb"));
+        assert(genesis.hashMerkleRoot == uint256S("5b26b25b6726b986016f1cad7582aa793249c0e149485390f787e3e3b28cbb04"));
 
         // Keep configured testnet bootstrap peers (if any are provided).
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
